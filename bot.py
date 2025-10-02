@@ -51,15 +51,19 @@ class FoosballBot:
                     self._send_private_message(user_id, expired_msg)
     
     def _handle_message(self, msg):
+        # Ignore messages from the bot itself
+        if msg['sender_email'] == self.config.zulip_email:
+            return
+
         if msg['type'] == 'private' or (msg['type'] == 'stream' and self._is_bot_mentioned(msg)):
             content = msg['content'].strip()
             sender_id = str(msg['sender_id'])
             sender_name = msg['sender_full_name']
-            
+
             self.logger.info(f"Received message from {sender_name}: {content}")
-            
+
             command = content.split()[0].lower() if content else ""
-            
+
             if command in self.commands:
                 response = self.commands[command](sender_id, sender_name)
                 self._send_response(msg, response)
