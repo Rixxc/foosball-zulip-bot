@@ -63,7 +63,8 @@ class FoosballBot:
             if command in self.commands:
                 response = self.commands[command](sender_id, sender_name)
                 self._send_response(msg, response)
-            elif content.startswith('/'):
+            else:
+                # Send help for any unrecognized message
                 response = self.config.messages['help']
                 self._send_response(msg, response)
     
